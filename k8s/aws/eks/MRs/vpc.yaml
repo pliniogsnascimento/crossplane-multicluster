@@ -1,0 +1,82 @@
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: VPC
+metadata:
+  name: crossplane-eks-vpc
+spec:
+  forProvider:
+    cidrBlock: 10.0.0.0/16
+    region: us-east-1
+    tags:
+    - key: Name
+      value: crossplane-eks-vpc
+  providerConfigRef:
+    name: default
+  writeConnectionSecretToRef:
+    name: crossplane-eks-vpc
+    namespace: crossplane-system
+---
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: Subnet
+metadata:
+  name: crossplane-private-subnet-1
+  labels:
+    type: private
+    cluster: crossplane-eks
+spec:
+  forProvider:
+    vpcIdRef:
+      name: crossplane-eks-vpc
+    cidrBlock: 10.0.0.0/20
+    region: us-east-1
+    availabilityZone: us-east-1a
+    tags:
+    - key: Name
+      value: private-subnet-1
+    - key: kubernetes.io/cluster/crossplane-eks-cluster
+      value: shared
+  providerConfigRef:
+    name: default
+---
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: Subnet
+metadata:
+  name: crossplane-private-subnet-2
+  labels:
+    type: private
+    cluster: crossplane-eks
+spec:
+  forProvider:
+    vpcIdRef:
+      name: crossplane-eks-vpc
+    cidrBlock: 10.0.16.0/20
+    region: us-east-1
+    availabilityZone: us-east-1b
+    tags:
+    - key: Name
+      value: private-subnet-2
+    - key: kubernetes.io/cluster/crossplane-eks-cluster
+      value: shared
+  providerConfigRef:
+    name: default
+---
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: Subnet
+metadata:
+  name: crossplane-private-subnet-3
+  labels:
+    type: private
+    cluster: crossplane-eks
+spec:
+  forProvider:
+    vpcIdRef:
+      name: crossplane-eks-vpc
+    cidrBlock: 10.0.32.0/20
+    region: us-east-1
+    availabilityZone: us-east-1c
+    tags:
+    - key: Name
+      value: private-subnet-3
+    - key: kubernetes.io/cluster/crossplane-eks-cluster
+      value: shared
+  providerConfigRef:
+    name: default
