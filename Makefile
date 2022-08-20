@@ -1,3 +1,5 @@
+create-all: create-cluster install-crossplane
+
 create-cluster:
 	kind create cluster --config=kind/config.yaml
 
@@ -11,11 +13,11 @@ install-crossplane:
 	helm repo add crossplane-stable https://charts.crossplane.io/stable
 	helm repo update
 
-	helm install crossplane --namespace crossplane-system crossplane-stable/crossplane --set provider.packages={crossplane/provider-aws:v1.9.0}
+	helm install crossplane --namespace crossplane-system crossplane-stable/crossplane --set args={'--debug'}
 
 configure-aws:
 	./scripts/get-aws-creds.sh
 	kubectl create secret generic aws-creds -n crossplane-system --from-file=creds=./creds.conf || true
 
 	kubectl crossplane install configuration registry.upbound.io/xp/getting-started-with-aws:latest
-	kubectl apply -f ./aws/provider
+	kubectl apply -f ./k8s/aws/provider

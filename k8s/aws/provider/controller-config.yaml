@@ -2,6 +2,7 @@ apiVersion: pkg.crossplane.io/v1alpha1
 kind: ControllerConfig
 metadata:
   name: aws-config
+  namespace: crossplane-system
 spec:
   podSecurityContext:
     fsGroup: 2000
