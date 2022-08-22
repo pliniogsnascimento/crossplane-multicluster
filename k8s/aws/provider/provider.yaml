@@ -1,3 +1,15 @@
+
+apiVersion: pkg.crossplane.io/v1alpha1
+kind: ControllerConfig
+metadata:
+  name: aws-config
+  namespace: crossplane-system
+spec:
+  podSecurityContext:
+    fsGroup: 2000
+  args:
+  - '--debug'
+---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:

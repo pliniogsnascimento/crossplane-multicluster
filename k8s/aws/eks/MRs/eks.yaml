@@ -14,11 +14,9 @@ spec:
       subnetIdSelector:
         matchLabels:
           cluster: crossplane-eks
-      securityGroupIdRefs:
-        - name: sample-cluster-sg
     version: "1.22"
   writeConnectionSecretToRef:
     name: cluster-conn
-    namespace: crossplane-system
+    namespace: default
   providerConfigRef:
     name: default
