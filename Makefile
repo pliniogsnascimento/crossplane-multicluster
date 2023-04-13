@@ -1,7 +1,7 @@
 create-all: create-cluster install-crossplane configure-aws
 
 create-cluster:
-	kind create cluster --config=kind/config.yaml
+	kind create cluster --config=k8s/kind/config.yaml
 
 delete-cluster:
 	# kind delete cluster --name=$(cat ./kind/config.yaml |grep name |awk '{print $$2}')
