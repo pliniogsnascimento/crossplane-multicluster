@@ -1,21 +1,13 @@
-
-apiVersion: pkg.crossplane.io/v1alpha1
-kind: ControllerConfig
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
 metadata:
-  name: aws-config
-  namespace: crossplane-system
+  name: provider-family-aws
 spec:
-  podSecurityContext:
-    fsGroup: 2000
-  args:
-  - '--debug'
+  package: xpkg.upbound.io/upbound/provider-family-aws:v1
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws
-  namespace: crossplane-system
+  name: provider-aws-s3
 spec:
-  package: "crossplane/provider-aws:v0.30.1"
-  controllerConfigRef:
-    name: aws-config
+  package: xpkg.upbound.io/upbound/provider-aws-s3:v1

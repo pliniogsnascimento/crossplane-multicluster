@@ -8,20 +8,22 @@ delete-cluster:
 	kind delete cluster --name=crossplane-cluster
 
 install-crossplane:
-	kubectl create namespace crossplane-system
+	kubectl create namespace upbound-system
 
-	helm repo add crossplane-stable https://charts.crossplane.io/stable
+	# Using Upbound instead of crossplane
+	helm repo add upbound-stable https://charts.upbound.io/stable
 	helm repo update
 
-	helm install crossplane --namespace crossplane-system crossplane-stable/crossplane --set args={'--debug'}
-	kubectl wait --for=condition=Available=true deployment/crossplane --timeout=60s -n=crossplane-system
+	helm install uxp --namespace upbound-system upbound-stable/universal-crossplane --devel
+	kubectl wait --for=condition=Available=true deployment/crossplane --timeout=60s -n=upbound-system
 
 configure-aws:
 	./scripts/get-aws-creds.sh
-	kubectl create secret generic aws-creds -n crossplane-system --from-file=creds=./creds.conf || true
+	kubectl create secret generic aws-creds -n upbound-system --from-file=creds=./creds.conf || true
 
 	kubectl apply -f ./k8s/aws/provider/provider.yaml
-	kubectl wait --for=condition=Healthy=true provider.pkg.crossplane.io/provider-aws --timeout=5m
+	kubectl wait --for=condition=Healthy=true providers.pkg.crossplane.io/provider-family-aws --timeout=5m
+	kubectl wait --for=condition=Healthy=true providers.pkg.crossplane.io/provider-aws-s3 --timeout=5m
 	kubectl apply -f ./k8s/aws/provider/provider-config.yaml
 
 deploy-eks:
