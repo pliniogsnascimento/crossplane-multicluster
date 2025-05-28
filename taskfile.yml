@@ -1,0 +1,49 @@
+# https://taskfile.dev
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  default:
+    cmds:
+      - task: create-kind-cluster
+      - task: deploy-crossplane
+      # - task: configure-aws
+    silent: true
+
+  create-kind-cluster:
+    dir: '{{.USER_WORKING_DIR}}/k8s/kind'
+    cmds:
+    - kind create cluster --config=cluster.yaml
+    - task: deploy-metrics-server
+
+  deploy-metrics-server:
+    cmds:
+    - kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+    - kubectl patch -n kube-system deployment metrics-server --type=json -p '[{"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--kubelet-insecure-tls"}]'
+    - kubectl wait --for=condition=Available deployment/metrics-server --namespace=kube-system --timeout=2m
+  
+  delete-kind-cluster:
+    cmds:
+    - kind delete cluster --name=crossplane-cluster
+  
+  deploy-crossplane:
+    cmds:
+    - kubectl create namespace crossplane-system || true
+    - helm repo add crossplane-stable https://charts.crossplane.io/stable
+    - helm repo update
+    - helm upgrade --install crossplane --namespace crossplane-system crossplane-stable/crossplane --devel --values=crossplane-values.yaml
+    - kubectl wait --for=condition=Available=true deployment/crossplane --timeout=60s -n=crossplane-system
+
+  configure-aws:
+    cmds:
+    - task: get-aws-credentials
+    - kubectl create secret generic aws-creds -n crossplane-system --from-file=creds=./creds.conf || true
+    - kubectl apply -f ./k8s/aws/provider/
+
+  get-aws-credentials:
+    cmds:
+    - echo -e "[default]\naws_access_key_id = $(aws configure get aws_access_key_id --profile $AWS_PROFILE)\naws_secret_access_key = $(aws configure get aws_secret_access_key --profile $AWS_PROFILE)" > creds.conf
+    env:
+      AWS_PROFILE: default

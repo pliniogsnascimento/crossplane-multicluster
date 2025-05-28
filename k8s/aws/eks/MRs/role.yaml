@@ -1,10 +1,10 @@
-apiVersion: iam.aws.crossplane.io/v1beta1
+apiVersion: iam.aws.upbound.io/v1beta1
 kind: Role
 metadata:
   name: crossplane-eks-role
 spec:
   forProvider:
-    assumeRolePolicyDocument: |
+    assumeRolePolicy: |
       {
         "Version": "2012-10-17",
         "Statement": [
@@ -28,7 +28,7 @@ spec:
         ]
       }
     tags:
-      - key: app
-        value: crossplane
+      Name: crossplane-eks-role
+      app: crossplane
   providerConfigRef:
     name: default

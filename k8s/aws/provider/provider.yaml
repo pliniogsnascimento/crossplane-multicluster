@@ -1,13 +1,50 @@
+apiVersion: pkg.crossplane.io/v1beta1
+kind: DeploymentRuntimeConfig
+metadata:
+  name: performance-specs
+spec:
+  deploymentTemplate:
+    spec:
+      selector: {}
+      template:
+        spec:
+          containers:
+            - name: package-runtime
+              args:
+                - --max-reconcile-rate=1
+---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: provider-family-aws
 spec:
   package: xpkg.upbound.io/upbound/provider-family-aws:v1
+  runtimeConfigRef:
+    name: performance-specs
+# ---
+# apiVersion: pkg.crossplane.io/v1
+# kind: Provider
+# metadata:
+#   name: provider-aws-s3
+# spec:
+#   package: xpkg.upbound.io/upbound/provider-aws-s3:v1
+#   runtimeConfigRef:
+#     name: performance-specs
 ---
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: provider-aws-s3
+  name: provider-aws-ec2
 spec:
-  package: xpkg.upbound.io/upbound/provider-aws-s3:v1
+  package: xpkg.upbound.io/upbound/provider-aws-ec2:v1
+  runtimeConfigRef:
+    name: performance-specs
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-iam
+spec:
+  package: xpkg.upbound.io/upbound/provider-aws-iam:v1
+  runtimeConfigRef:
+    name: performance-specs

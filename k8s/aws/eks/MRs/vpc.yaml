@@ -1,4 +1,5 @@
-apiVersion: ec2.aws.crossplane.io/v1beta1
+# https://marketplace.upbound.io/providers/upbound/provider-aws-ec2/v1.22.0
+apiVersion: ec2.aws.upbound.io/v1beta1
 kind: VPC
 metadata:
   name: crossplane-eks-vpc
@@ -7,15 +8,14 @@ spec:
     cidrBlock: 10.0.0.0/16
     region: us-east-1
     tags:
-    - key: Name
-      value: crossplane-eks-vpc
+      Name: crossplane-eks-vpc
   providerConfigRef:
     name: default
   writeConnectionSecretToRef:
     name: crossplane-eks-vpc
     namespace: crossplane-system
 ---
-apiVersion: ec2.aws.crossplane.io/v1beta1
+apiVersion: ec2.aws.upbound.io/v1beta1
 kind: Subnet
 metadata:
   name: crossplane-private-subnet-1
@@ -30,14 +30,12 @@ spec:
     region: us-east-1
     availabilityZone: us-east-1a
     tags:
-    - key: Name
-      value: private-subnet-1
-    - key: kubernetes.io/cluster/crossplane-eks-cluster
-      value: shared
+      Name: crossplane-private-subnet-1
+      kubernetes.io/cluster/crossplane-eks-cluster: shared
   providerConfigRef:
     name: default
 ---
-apiVersion: ec2.aws.crossplane.io/v1beta1
+apiVersion: ec2.aws.upbound.io/v1beta1
 kind: Subnet
 metadata:
   name: crossplane-private-subnet-2
@@ -52,14 +50,12 @@ spec:
     region: us-east-1
     availabilityZone: us-east-1b
     tags:
-    - key: Name
-      value: private-subnet-2
-    - key: kubernetes.io/cluster/crossplane-eks-cluster
-      value: shared
+      Name: crossplane-private-subnet-2
+      kubernetes.io/cluster/crossplane-eks-cluster: shared
   providerConfigRef:
     name: default
 ---
-apiVersion: ec2.aws.crossplane.io/v1beta1
+apiVersion: ec2.aws.upbound.io/v1beta1
 kind: Subnet
 metadata:
   name: crossplane-private-subnet-3
@@ -74,9 +70,7 @@ spec:
     region: us-east-1
     availabilityZone: us-east-1c
     tags:
-    - key: Name
-      value: private-subnet-3
-    - key: kubernetes.io/cluster/crossplane-eks-cluster
-      value: shared
+      Name: crossplane-private-subnet-3
+      kubernetes.io/cluster/crossplane-eks-cluster: shared
   providerConfigRef:
     name: default

@@ -1,0 +1,3 @@
+args:
+- --max-reconcile-rate=1
+- --poll-interval=5m
