@@ -1,13 +1,13 @@
-apiVersion: iam.aws.crossplane.io/v1beta1
-kind: OpenIDConnectProvider
-metadata:
-  name: crossplane-eks-provider
-spec:
-  forProvider:
-    clientIDList:
-      - sts.amazonaws.com
-    thumbprintList:
-      - "9E99A48A9960B14926BB7F3B02E22DA2B0AB7280"
-    url: https://oidc.eks.us-east-1.amazonaws.com/id/8229BB71EED64E4B165E516738D84712
-  providerConfigRef:
-    name: default
+# apiVersion: iam.aws.upbound.io/v1beta1
+# kind: OpenIDConnectProvider
+# metadata:
+#   name: crossplane-eks-provider
+# spec:
+#   forProvider:
+#     clientIDList:
+#       - sts.amazonaws.com
+#     thumbprintList:
+#       - "9E99A48A9960B14926BB7F3B02E22DA2B0AB7280"
+#     url: https://oidc.eks.us-east-1.amazonaws.com/id/8229BB71EED64E4B165E516738D84712
+#   providerConfigRef:
+#     name: default

@@ -1,4 +1,4 @@
-apiVersion: eks.aws.crossplane.io/v1beta1
+apiVersion: eks.aws.upbound.io/v1beta2
 kind: Cluster
 metadata:
   name: crossplane-cluster
@@ -9,11 +9,13 @@ spec:
     region: us-east-1
     roleArnRef:
       name: crossplane-eks-role
-    resourcesVpcConfig:
+    vpcConfig:
+      securityGroupIdRefs:
+        - name: crossplane-cluster-nodes-sg
       subnetIdSelector:
         matchLabels:
           cluster: crossplane-eks
-    version: "1.22"
+    version: "1.32"
   writeConnectionSecretToRef:
     name: cluster-conn
     namespace: default

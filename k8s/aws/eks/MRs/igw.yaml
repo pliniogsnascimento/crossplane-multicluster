@@ -1,0 +1,11 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: InternetGateway
+metadata:
+  name: crossplane-cluster-igw
+spec:
+  forProvider:
+    region: us-east-1
+    tags:
+      Name: crossplane-cluster-igw
+    vpcIdRef:
+      name: crossplane-eks-vpc

@@ -1,0 +1,84 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: EIP
+metadata:
+  name: crossplane-cluster-nat-eip
+spec:
+  forProvider:
+    region: us-east-1
+    vpc: true
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: NATGateway
+metadata:
+  name: crossplane-cluster-nat
+spec:
+  forProvider:
+    connectivityType: public
+    region: us-east-1
+    subnetIdRef:
+      name: crossplane-private-subnet-1
+    tags:
+      Name: crossplane-nat-gw
+    allocationIdRef:
+      name: crossplane-cluster-nat-eip
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: RouteTable
+metadata:
+  name: crossplane-cluster-nat-rt
+spec:
+  forProvider:
+    region: us-east-1
+    tags:
+      Name: crossplane-cluster-nat-rt
+    vpcIdRef:
+      name: crossplane-eks-vpc
+---
+apiVersion: ec2.aws.upbound.io/v1beta2
+kind: Route
+metadata:
+  name: crossplane-cluster-nat-route
+spec:
+  forProvider:
+    destinationCidrBlock: 0.0.0.0/0
+    natGatewayIdRef:
+      name: crossplane-cluster-nat
+    region: us-east-1
+    routeTableIdRef:
+      name: crossplane-cluster-nat-rt
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: RouteTableAssociation
+metadata:
+  name: crossplane-cluster-nat-priv1-rta
+spec:
+  forProvider:
+    region: us-east-1
+    routeTableIdRef:
+      name: crossplane-cluster-nat-rt
+    subnetIdRef:
+      name: crossplane-private-subnet-1
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: RouteTableAssociation
+metadata:
+  name: crossplane-cluster-nat-priv2-rta
+spec:
+  forProvider:
+    region: us-east-1
+    routeTableIdRef:
+      name: crossplane-cluster-nat-rt
+    subnetIdRef:
+      name: crossplane-private-subnet-2
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: RouteTableAssociation
+metadata:
+  name: crossplane-cluster-nat-priv3-rta
+spec:
+  forProvider:
+    region: us-east-1
+    routeTableIdRef:
+      name: crossplane-cluster-nat-rt
+    subnetIdRef:
+      name: crossplane-private-subnet-3

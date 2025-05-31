@@ -1,0 +1,73 @@
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Role
+metadata:
+  name: crossplane-eks-ng-role
+spec:
+  forProvider:
+    assumeRolePolicy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": [
+                        "ec2.amazonaws.com"
+                    ]
+                },
+                "Action": [
+                    "sts:AssumeRole"
+                ]
+            }
+        ]
+      }
+    tags:
+      Name: crossplane-eks-ng-role
+      app: crossplane
+  providerConfigRef:
+    name: default  
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: crossplane-eks-cluster-policy-ecr
+spec:
+  forProvider:
+    policyArn: arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+    roleRef:
+      name: crossplane-eks-ng-role
+  providerConfigRef:
+    name: default
+  writeConnectionSecretToRef:
+    name: crossplane-eks-cluster-policy-ecr
+    namespace: crossplane-system
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: crossplane-eks-cluster-policy-worker-node
+spec:
+  forProvider:
+    policyArn: arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+    roleRef:
+      name: crossplane-eks-ng-role
+  providerConfigRef:
+    name: default
+  writeConnectionSecretToRef:
+    name: crossplane-eks-cluster-policy-worker-node
+    namespace: crossplane-system
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: crossplane-eks-cluster-policy-cni
+spec:
+  forProvider:
+    policyArn: arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+    roleRef:
+      name: crossplane-eks-ng-role
+  providerConfigRef:
+    name: default
+  writeConnectionSecretToRef:
+    name: crossplane-eks-cluster-policy-cni
+    namespace: crossplane-system

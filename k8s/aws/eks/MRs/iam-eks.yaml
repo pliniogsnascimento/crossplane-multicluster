@@ -32,3 +32,33 @@ spec:
       app: crossplane
   providerConfigRef:
     name: default
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: crossplane-eks-cluster-policy-cluster-policy
+spec:
+  forProvider:
+    policyArn: arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+    roleRef:
+      name: crossplane-eks-role
+  providerConfigRef:
+    name: default
+  writeConnectionSecretToRef:
+    name: crossplane-eks-cluster-policy-cluster-policy
+    namespace: crossplane-system
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: crossplane-eks-cluster-policy-vpc-controller
+spec:
+  forProvider:
+    policyArn: arn:aws:iam::aws:policy/AmazonEKSVPCResourceController
+    roleRef:
+      name: crossplane-eks-role
+  providerConfigRef:
+    name: default
+  writeConnectionSecretToRef:
+    name: crossplane-eks-cluster-policy-vpc-controller
+    namespace: crossplane-system

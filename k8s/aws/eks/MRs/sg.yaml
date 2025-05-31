@@ -1,0 +1,59 @@
+# apiVersion: ec2.aws.upbound.io/v1beta1
+# kind: SecurityGroup
+# metadata:
+#   name: crossplane-cluster-sg
+# spec:
+#   forProvider:
+#     description: Allow control plane communication
+#     name: crossplane-cluster-sg
+#     region: us-east-1
+#     tags:
+#       Name: crossplane-cluster-sg
+#     vpcIdRef:
+#       name: crossplane-eks-vpc
+# ---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroup
+metadata:
+  name: crossplane-cluster-nodes-sg
+spec:
+  forProvider:
+    description: Allow nodes and control plane communication
+    name: crossplane-cluster-nodes-sg
+    region: us-east-1
+    tags:
+      Name: crossplane-cluster-nodes-sg
+    vpcIdRef:
+      name: crossplane-eks-vpc
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroupRule
+metadata:
+  name: crossplane-cluster-nodes-sg-allow-all-ingress
+spec:
+  forProvider:
+    cidrBlocks:
+      - 0.0.0.0/0
+    fromPort: 0
+    protocol: "-1"
+    region: us-east-1
+    securityGroupIdRef:
+      name: crossplane-cluster-nodes-sg
+    toPort: 65535
+    type: ingress
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroupRule
+metadata:
+  name: crossplane-cluster-nodes-sg-allow-all-egress
+spec:
+  forProvider:
+    cidrBlocks:
+      - 0.0.0.0/0
+    fromPort: 0
+    protocol: "-1"
+    region: us-east-1
+    securityGroupIdRef:
+      name: crossplane-cluster-nodes-sg
+    toPort: 65535
+    type: egress

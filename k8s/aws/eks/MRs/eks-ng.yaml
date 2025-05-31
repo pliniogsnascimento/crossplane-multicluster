@@ -1,0 +1,27 @@
+apiVersion: eks.aws.upbound.io/v1beta2
+kind: NodeGroup
+metadata:
+  annotations:
+    meta.upbound.io/example-id: eks/v1beta2/nodegroup
+  name: crossplane-cluster-ng
+spec:
+  forProvider:
+    clusterNameRef:
+      name: crossplane-cluster
+    nodeRoleArnRef:
+      name: crossplane-eks-ng-role
+    region: us-east-1
+    capacityType: SPOT
+    instanceTypes:
+      - t3.small
+    scalingConfig:
+      desiredSize: 1
+      maxSize: 1
+      minSize: 1
+    subnetIdRefs:
+      - name: crossplane-private-subnet-1
+      - name: crossplane-private-subnet-2
+      - name: crossplane-private-subnet-3
+    # remoteAccess:
+    #   sourceSecurityGroupIdRefs:
+    #     - name: crossplane-cluster-nodes-sg
