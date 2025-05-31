@@ -9,3 +9,40 @@ spec:
       Name: crossplane-cluster-igw
     vpcIdRef:
       name: crossplane-eks-vpc
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: RouteTable
+metadata:
+  name: crossplane-cluster-igw-rt
+spec:
+  forProvider:
+    region: us-east-1
+    tags:
+      Name: crossplane-cluster-igw-rt
+    vpcIdRef:
+      name: crossplane-eks-vpc    
+---
+apiVersion: ec2.aws.upbound.io/v1beta2
+kind: Route
+metadata:
+  name: crossplane-cluster-igw-route
+spec:
+  forProvider:
+    destinationCidrBlock: 0.0.0.0/0
+    gatewayIdRef:
+      name: crossplane-cluster-igw
+    region: us-east-1
+    routeTableIdRef:
+      name: crossplane-cluster-igw-rt
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: RouteTableAssociation
+metadata:
+  name: crossplane-cluster-nat-pub1-rta
+spec:
+  forProvider:
+    region: us-east-1
+    routeTableIdRef:
+      name: crossplane-cluster-igw-rt
+    subnetIdRef:
+      name: crossplane-public-subnet-1

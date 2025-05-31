@@ -40,7 +40,7 @@ tasks:
     cmds:
     - task: get-aws-credentials
     - kubectl create secret generic aws-creds -n crossplane-system --from-file=creds=./creds.conf || true
-    - kubectl apply -f ./k8s/aws/provider/
+    - kubectl apply -f ./k8s/aws/provider
 
   get-aws-credentials:
     cmds:

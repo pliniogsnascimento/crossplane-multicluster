@@ -16,7 +16,7 @@ spec:
     connectivityType: public
     region: us-east-1
     subnetIdRef:
-      name: crossplane-private-subnet-1
+      name: crossplane-public-subnet-1
     tags:
       Name: crossplane-nat-gw
     allocationIdRef:

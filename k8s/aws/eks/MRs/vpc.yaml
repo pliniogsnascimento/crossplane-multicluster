@@ -20,6 +20,26 @@ spec:
 apiVersion: ec2.aws.upbound.io/v1beta1
 kind: Subnet
 metadata:
+  name: crossplane-public-subnet-1
+  labels:
+    type: public
+    cluster: crossplane-eks
+spec:
+  forProvider:
+    vpcIdRef:
+      name: crossplane-eks-vpc
+    cidrBlock: 10.0.64.0/20
+    region: us-east-1
+    availabilityZone: us-east-1a
+    tags:
+      Name: crossplane-public-subnet-1
+      kubernetes.io/cluster/crossplane-eks-cluster: shared
+  providerConfigRef:
+    name: default
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Subnet
+metadata:
   name: crossplane-private-subnet-1
   labels:
     type: private
